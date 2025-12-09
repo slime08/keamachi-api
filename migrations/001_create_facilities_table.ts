@@ -1,0 +1,32 @@
+import sql from '../lib/db';
+
+async function migrate() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS facilities (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      address VARCHAR(255) NOT NULL,
+      services TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+  console.log('Facilities table created or already exists.');
+}
+
+async function rollback() {
+  await sql`
+    DROP TABLE IF EXISTS facilities;
+  `;
+  console.log('Facilities table dropped.');
+}
+
+// マイグレーション実行用のスクリプト
+if (require.main === module) {
+  migrate().catch(err => {
+    console.error('Migration failed:', err);
+    process.exit(1);
+  });
+}
+
+export { migrate, rollback };
