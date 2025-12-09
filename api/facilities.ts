@@ -1,17 +1,20 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default function facilities(request: VercelRequest, response: VercelResponse) {
-  // CORSを許可
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default function facilities(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // OPTIONSリクエストへの対応
-  if (request.method === 'OPTIONS') {
-    return response.status(200).send('OK');
+  if (req.method === 'OPTIONS') {
+    res.status(200).send('OK');
+    return;
   }
 
-  // ダミーの施設一覧データ
+  if (req.method !== 'GET') {
+    res.status(405).json({ error: 'Method Not Allowed' });
+    return;
+  }
+
   const dummyFacilities = [
     {
       "id": 1,
@@ -27,5 +30,5 @@ export default function facilities(request: VercelRequest, response: VercelRespo
     }
   ];
 
-  response.status(200).json(dummyFacilities);
+  res.status(200).json(dummyFacilities);
 }

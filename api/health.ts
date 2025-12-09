@@ -1,15 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default function health(request: VercelRequest, response: VercelResponse) {
-  // CORSを許可
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default function health(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // OPTIONSリクエストへの対応
-  if (request.method === 'OPTIONS') {
-    return response.status(200).send('OK');
+  if (req.method === 'OPTIONS') {
+    res.status(200).send('OK');
+    return;
   }
 
-  response.status(200).json({ status: 'API is running' });
+  if (req.method !== 'GET') {
+    res.status(405).json({ error: 'Method Not Allowed' });
+    return;
+  }
+  res.status(200).json({ status: 'API is running' });
 }
