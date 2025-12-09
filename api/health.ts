@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default function index(request: VercelRequest, response: VercelResponse) {
+export default function health(request: VercelRequest, response: VercelResponse) {
   // CORSを許可
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -11,5 +11,5 @@ export default function index(request: VercelRequest, response: VercelResponse) 
     return response.status(200).send('OK');
   }
 
-  response.status(200).json({ message: 'keamachi-api root' });
+  response.status(200).json({ status: 'API is running' });
 }
