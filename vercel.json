@@ -4,9 +4,25 @@
     {
       "src": "api/index.ts",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/health.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/facilities.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/health",
+      "dest": "api/health.ts"
+    },
+    {
+      "src": "/api/facilities",
+      "dest": "api/facilities.ts"
+    },
     {
       "src": "/api/(.*)",
       "dest": "api/index.ts"
