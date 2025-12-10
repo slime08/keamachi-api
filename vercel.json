@@ -12,6 +12,10 @@
     {
       "src": "api/facilities.ts",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/dbtest.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -27,6 +31,15 @@
     {
       "src": "/api/facilities",
       "dest": "api/facilities.ts",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    },
+    {
+      "src": "/api/dbtest",
+      "dest": "api/dbtest.ts",
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
