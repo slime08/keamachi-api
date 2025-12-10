@@ -1,7 +1,18 @@
 // keamachi-api/api/facilities.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { query } from '../lib/db';
+import { createClient } from '@supabase/supabase-js';
 
+// ---- Supabase HTTP クライアント作成 ----
+const supabaseUrl = process.env.SUPABASE_HTTP_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('SUPABASE_HTTP_URL or SUPABASE_ANON_KEY is not set');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// ---- ハンドラ ----
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,26 +23,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).send('OK');
   }
 
-  // 施設一覧（GET）
   if (req.method === 'GET') {
     try {
-      const result = await query(
-        `SELECT id, name, description, location, service_type, phone
-         FROM facilities
-         ORDER BY id`
-      );
+      const { data, error } = await supabase
+        .from('facilities')
+        .select('id, name, description, location, service_type, phone')
+        .order('id', { ascending: true });
 
-      return res.status(200).json(result.rows);
-    } catch (error) {
-      console.error('Error fetching facilities:', error);
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(500).json({
+          error: 'Failed to fetch facilities from Supabase',
+          detail: String(error.message),
+        });
+      }
+
+      return res.status(200).json(data ?? []);
+    } catch (e) {
+      console.error('Unexpected error in /api/facilities:', e);
       return res.status(500).json({
         error: 'Failed to fetch facilities',
-        detail: String(error),
+        detail: String(e),
       });
     }
   }
-
-  // 必要なら POST もここに追加できる（いったん省略でもOK）
 
   return res.status(405).json({ error: 'Method Not Allowed' });
 }
