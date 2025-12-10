@@ -1,20 +1,22 @@
-import postgres from 'postgres';
-import dotenv from 'dotenv';
+// keamachi-api/lib/db.ts
+import pkg from 'pg';
 
-dotenv.config(); // .envファイルを読み込む
+const { Pool } = pkg;
 
-// Vercel PostgreSQLアドオンから提供される接続URL
-const connectionString = process.env.POSTGRES_URL;
+const connectionString = process.env.SUPABASE_URL;
 
 if (!connectionString) {
-  console.error('Environment variable POSTGRES_URL is not set.');
-  process.exit(1);
+  throw new Error('SUPABASE_URL is not set');
 }
 
-// データベース接続インスタンスを作成
-const sql = postgres(connectionString, {
-  ssl: 'require', // Vercel PostgreSQL は SSL 接続を必須とします
-  max: 1 // Vercel Serverless Functions の性質上、コネクションプールは小さく保つ
+// Supabase Postgres 用の接続プール
+export const pool = new Pool({
+  connectionString,
+  ssl: { rejectUnauthorized: false },
 });
 
-export default sql;
+export const query = (text: string, params?: any[]) => {
+  return pool.query(text, params);
+};
+
+export default { query };
