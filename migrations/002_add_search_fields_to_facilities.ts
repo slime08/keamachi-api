@@ -1,4 +1,4 @@
-import sql from '../lib/db';
+﻿import sql from '../lib/db';
 
 async function migrate() {
   await sql`

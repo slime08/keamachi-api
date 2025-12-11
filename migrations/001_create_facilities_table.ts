@@ -1,4 +1,4 @@
-import sql from '../lib/db';
+﻿import sql from '../lib/db';
 
 async function migrate() {
   await sql`
@@ -21,7 +21,7 @@ async function rollback() {
   console.log('Facilities table dropped.');
 }
 
-// マイグレーション実行用のスクリプト
+// 繝槭う繧ｰ繝ｬ繝ｼ繧ｷ繝ｧ繝ｳ螳溯｡檎畑縺ｮ繧ｹ繧ｯ繝ｪ繝励ヨ
 if (require.main === module) {
   migrate().catch(err => {
     console.error('Migration failed:', err);

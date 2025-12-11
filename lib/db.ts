@@ -1,4 +1,4 @@
-// keamachi-api/lib/db.ts
+﻿// keamachi-api/lib/db.ts
 import pkg from 'pg';
 
 const { Pool } = pkg;
@@ -9,7 +9,7 @@ if (!connectionString) {
   throw new Error('SUPABASE_URL is not set');
 }
 
-// Supabase Postgres 用の接続プール
+// Supabase Postgres 逕ｨ縺ｮ謗･邯壹・繝ｼ繝ｫ
 export const pool = new Pool({
   connectionString,
   ssl: { rejectUnauthorized: false },

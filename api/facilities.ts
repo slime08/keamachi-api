@@ -1,8 +1,8 @@
-// keamachi-api/api/facilities.ts
+﻿// keamachi-api/api/facilities.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
-// ---- Supabase HTTP クライアント ----
+// ---- Supabase HTTP 繧ｯ繝ｩ繧､繧｢繝ｳ繝・----
 const supabaseUrl = process.env.SUPABASE_HTTP_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
@@ -12,8 +12,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 一覧用のフォーマッタ（server/routes/facilities.ts と同じロジック）
-const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
+// 荳隕ｧ逕ｨ縺ｮ繝輔か繝ｼ繝槭ャ繧ｿ・・erver/routes/facilities.ts 縺ｨ蜷後§繝ｭ繧ｸ繝・け・・const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 
 type Day = (typeof days)[number];
 
@@ -29,7 +28,7 @@ function formatAvailability(row: any) {
   };
 
   days.forEach((day) => {
-    const dbKey = `${day}_availability`; // 例: mon_availability
+    const dbKey = `${day}_availability`; // 萓・ mon_availability
     const dbValue = row[dbKey];
 
     let mapped: 'open' | 'limited' | 'closed';
@@ -83,7 +82,7 @@ function formatFacility(row: any) {
   };
 }
 
-// ---- ハンドラ ----
+// ---- 繝上Φ繝峨Λ ----
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -96,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     try {
-      // availability 用のカラムも含めて全部取る (* でOK)
+      // availability 逕ｨ縺ｮ繧ｫ繝ｩ繝繧ょ性繧√※蜈ｨ驛ｨ蜿悶ｋ (* 縺ｧOK)
       const { data, error } = await supabase
         .from('facilities')
         .select('*')
