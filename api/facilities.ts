@@ -2,19 +2,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
-// ---- Supabase HTTP 繧ｯ繝ｩ繧､繧｢繝ｳ繝・----
-const supabaseUrl = process.env.SUPABASE_HTTP_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
+type Day = (typeof days)[number];
+
+// ---- Supabase client initialization (server-side, uses service role key) ----
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Use service role key for backend access
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('SUPABASE_HTTP_URL or SUPABASE_ANON_KEY is not set');
+  throw new Error('SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
-
-// 荳隕ｧ逕ｨ縺ｮ繝輔か繝ｼ繝槭ャ繧ｿ・・erver/routes/facilities.ts 縺ｨ蜷後§繝ｭ繧ｸ繝・け・・const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
-
-type Day = (typeof days)[number];
 
 function formatAvailability(row: any) {
   const availability: Record<Day, 'open' | 'limited' | 'closed'> = {

@@ -2,7 +2,8 @@
 
 const allowedOrigins = [
   'https://keamachi.vercel.app',
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'http://localhost:5174'
 ];
 
 export default function health(req: VercelRequest, res: VercelResponse) {
