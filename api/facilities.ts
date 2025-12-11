@@ -84,13 +84,28 @@ function formatFacility(row: any) {
 
 // ---- 繝上Φ繝峨Λ ----
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const allowedOrigins = [
+    'https://keamachi.vercel.app',
+    'http://localhost:5173'
+  ];
+
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    // For local dev via curl or unknown origins, allow specific local dev origin or none
+    if (origin === 'http://localhost:5173') { // Fallback for specific local dev if not in allowedOrigins array
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    } else if (!origin) { // Allow requests without Origin header (e.g. curl)
+      res.setHeader('Access-Control-Allow-Origin', '*'); // Or just omit header if not needed
+    }
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Added Authorization header
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).send('OK');
+    res.status(200).end();
+    return;
   }
 
   if (req.method === 'GET') {
